@@ -16,6 +16,7 @@ namespace DecoratorPatternExample
             SugarSpoons = sugarSpoons;
             Name = name;
         }
+
         public bool BrewTea()
         {
             Console.WriteLine("Brewing " + Name + " tea with " + SugarSpoons + " sugar spoons.");

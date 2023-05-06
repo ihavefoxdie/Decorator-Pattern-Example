@@ -18,7 +18,6 @@ namespace DecoratorPatternExample
                 System.Console.WriteLine("Water temperature: " + teaProxy.WaterTemp);
                 Thread.Sleep(1000);
             }
-
         }
     }
 }
