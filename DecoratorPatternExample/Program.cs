@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Threading;
 
 namespace DecoratorPatternExample
 {
@@ -6,19 +6,22 @@ namespace DecoratorPatternExample
     {
         static void Main(string[] args)
         {
-            CeylonTea tea = new(0.25f);
-            Console.WriteLine("Name: " + tea.Name);
-            tea.BrewTea();
-
-            Console.WriteLine("\nDecorator: ");
-            MintTea mintTea = new(tea, 2);
-            Console.WriteLine("Name: " + mintTea.Name);
-            mintTea.BrewTea();
-
-            Console.WriteLine("\n2nd decorator: ");
-            TeaWithSugar sugarTea = new(mintTea, 2);
-            Console.WriteLine("Name: " + sugarTea.Name);
-            sugarTea.BrewTea();
+            RealTea realTea = new(2, "Black");
+            TeaProxy teaProxy = new(realTea, 10);
+            Thread thread1 = new(teaProxy.BoilWater);
+            thread1.Start();
+            System.Console.WriteLine("Started water boiling process.\n");
+            while(true)
+            {
+                System.Console.WriteLine("Water temperature: " + teaProxy.WaterTemp);
+                Thread.Sleep(2500);
+                if(teaProxy.BrewTea())
+                {
+                    System.Console.WriteLine("Water temperature: " + teaProxy.WaterTemp);
+                    break;
+                }
+            }
+            
         }
     }
 }
