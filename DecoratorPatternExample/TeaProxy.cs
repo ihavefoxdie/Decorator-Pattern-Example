@@ -5,26 +5,31 @@ namespace DecoratorPatternExample
     public sealed class TeaProxy : Tea
     {
         private Tea _tea;
+        object lockObj = new();
+        object lockObj2 = new();
         public float WaterInL { get; set; }
         public int WaterTemp { get; private set; } = 10;
         private Thread _thread;
+
         public TeaProxy(Tea tea, int waterInL)
         {
             _tea = tea;
             WaterInL = waterInL;
-            _thread = new(this.WaterTempDrop);
+            _thread = new(WaterTempDrop);
             _thread.IsBackground = true;
             _thread.Start();
         }
 
         public void BoilWater()
         {
-            for (; WaterTemp < 100;)
+            lock (lockObj2)
             {
+                for (; WaterTemp < 100;)
+                {
                     WaterTemp += 1;
-                Thread.Sleep(100);
+                    Thread.Sleep(100);
+                }
             }
-            
         }
 
         public bool BrewTea()
@@ -39,11 +44,14 @@ namespace DecoratorPatternExample
 
         public void WaterTempDrop()
         {
-            while (true)
+            lock (lockObj)
             {
-                if (WaterTemp > 10)
-                    WaterTemp--;
-                Thread.Sleep(1000);
+                while (true)
+                {
+                    if (WaterTemp > 10)
+                        WaterTemp -= 2;
+                    Thread.Sleep(2000);
+                }
             }
         }
     }
